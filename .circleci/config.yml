@@ -92,12 +92,12 @@ workflows:
           filters:
             branches:
               only: master
-      #- deploy-preview:
-      #    requires:
-      #      - build
-      #    filters:
-      #      branches:
-      #        only: deploy-preview
+      - deploy-preview:
+          requires:
+            - build
+          filters:
+            branches:
+              only: deploy-preview
 
   # We run a nightly build for running build/maintenance tasks
   # such as pulling in docker image tags or automating our api documentation
@@ -357,15 +357,12 @@ jobs:
           name: Deploy to S3 if tests pass and branch is Master
           command: aws s3 sync generated-site/docs s3://circle-production-static-site/docs/ --delete
 
-  #deploy-preview:
-  #  docker:
-  #    - image: cibuilds/aws:1.16.185
-  #  steps:
-  #    - attach_workspace:
-  #        at: ./generated-site
-  #    - run:
-  #        name: Deploy preview version
-  #        command: aws s3 sync generated-site/docs s3://circleci-doc-preview/docs-${CIRCLE_BRANCH} --delete
-  #    - run:
-  #        name: notify GitHub
-  #        command: echo hi
+  deploy-preview:
+    docker:
+      - image: cibuilds/aws:1.16.185
+    steps:
+      - attach_workspace:
+          at: ./generated-site
+      - run:
+          name: Deploy preview version
+          command: sleep 600
