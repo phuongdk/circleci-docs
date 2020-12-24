@@ -365,4 +365,4 @@ jobs:
           at: ./generated-site
       - run:
           name: Deploy preview version
-          command: sleep 600
+          command: aws s3 sync generated-site/docs s3://circleci-doc-preview/docs-deploy-preview --delete
